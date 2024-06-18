@@ -1,4 +1,4 @@
-function [e_ij_original,e_ij, omega_ij] = WE_null(n, rho, type,mode)
+function [e_ij_original,e_ij, omega_ij] = WE_null(n, rho, type,mode,sigma)
     % Variables and Priors
     e_ij_save = zeros(n, n);
 
@@ -7,15 +7,15 @@ function [e_ij_original,e_ij, omega_ij] = WE_null(n, rho, type,mode)
         a_i_save = normrnd(1, 1, [n, 1]);
         b_j_save = normrnd(1, 1, [n, 1]);
         gamma_ij_save = normrnd(1, 1, [n, n]);
-        epsilon_ij_save = normrnd(0, 1, [n, n]);
+        epsilon_ij_save = normrnd(0, sigma, [n, n]);
     elseif type =="poisson"
         a_i_save = poissrnd(1, [n, 1]);
         b_j_save = poissrnd(1, [n, 1]);
-        epsilon_ij_save = poissrnd(1, [n, n]);
+        epsilon_ij_save = poissrnd(sigma, [n, n]);
     elseif type =="uniform"
         a_i_save = unifrnd(0,1, [n, 1]);
         b_j_save = unifrnd(0,1, [n, 1]);
-        epsilon_ij_save = unifrnd(0,1, [n, n]);
+        epsilon_ij_save = unifrnd(0,sigma, [n, n]);
     end
     
     
