@@ -1,0 +1,22 @@
+My SLURM_ARRAY_TASK_ID:  15
+My SLURM_ARRAY_JOB_ID:  21979342
+result file is 21979342_15_
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2023 The MathWorks, Inc.
+             R2023a Update 3 (9.14.0.2286388) 64-bit (glnxa64)
+                                May 25, 2023
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+    21979342
+
+seed 15eta3/eta3_poisson_two_sample_21979342_15.csv
+sample size 200.00 alpha 1.750000 sigma 0.010000 rhosize 0.200000.
+sample size 200.00 alpha 1.750000 sigma 0.010000 rhosize 0.600000.
+sample size 200.00 alpha 1.750000 sigma 0.010000 rhosize 1.000000.
+sample size 400.00 alpha 1.750000 sigma 0.010000 rhosize 0.200000.
+sample size 400.00 alpha 1.750000 sigma 0.010000 rhosize 0.600000.
+sample size 400.00 alpha 1.750000 sigma 0.010000 rhosize 1.000000.

@@ -1,0 +1,21 @@
+My SLURM_ARRAY_TASK_ID:  6
+My SLURM_ARRAY_JOB_ID:  21979442
+result file is 21979442_6_
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2023 The MathWorks, Inc.
+             R2023a Update 3 (9.14.0.2286388) 64-bit (glnxa64)
+                                May 25, 2023
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+    21979442
+
+seed 6
+familiy = 
+
+    "poisson"
+
+eta3/eta3_poisson_two_sample_21979442_6.csv

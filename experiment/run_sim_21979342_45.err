@@ -1,0 +1,5 @@
+/var/spool/slurm/d/job21979387/slurm_script: line 25: activate: No such file or directory
+
+EnvironmentLocationNotFound: Not a conda environment: /scratch/midway3/yatingliu/.local/share/r-miniconda/envs/r-reticulate
+
+/var/spool/slurm/d/job21979387/slurm_script: line 40: cd: /scratch/midway3/yatingliu/sparse-network-effects-estimation/: No such file or directory

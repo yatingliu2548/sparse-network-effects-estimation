@@ -137,7 +137,7 @@ function [hatrho_J,hateta3_J,hateta3_full,var_source_Gamma1,var_source_gamma1_2_
         end
     end
 
-    var_V_J_star=mean( ((e_ij.*e_ik+e_ji.*e_jk+e_ki.*e_kj)./3-hatU3star_J-hatU1star_J.*((e_ij+e_ji)./2-hatU1star_J)).^2)/jn;
+    var_V_J_star=mean( ((e_ij.*e_ik+e_ji.*e_jk+e_ki.*e_kj)./3-hatU3star_J-2.*hatU1star_J.*((e_ij+e_ji)./2-hatU1star_J)).^2)/jn;
     musquare=(sum(tildemeansquare));
     var_V_J_star_2=abs(sum(var-sum(tildemeansquare)/jn)/(jn^2)*sizealpha);
 
@@ -155,12 +155,12 @@ function [hatrho_J,hateta3_J,hateta3_full,var_source_Gamma1,var_source_gamma1_2_
         g11_full(idx_i)=calculate_g11_J(e,idx_i,n,nchoosek(1:n,2));
     end
     var_source_Gamma1 =  max(0,hatrho_J^(-4)).*mean((3.*(g31-hatU3star_J)-4.*hatU1star_J.*(g11-hatU1star_J)).^2)/n;
-    var_source_Gamma1_2 =  max(0,hatrho_J^(-4)).*(var_V_J_star);
+    var_source_Gamma1_2 =  max(0,hatrho_J^(-4)).*(var_V_J_star_2);
     var_source_Gamma1_full = max(0,hatrho_J^(-4)).*mean((3.*(g31_full-mean(g31_full))-4.*mean(g11_full).*(g11_full-mean(g11_full))).^2)/n;
     
     hateta3_full=mean(g31_full)-mean(g11_full)^2;
     
-    var_source_gamma1_2_2=max(0,hatrho_J^(-4)).*var_V_J_star_2;
+    var_source_gamma1_2_2=max(0,hatrho_J^(-4)).*var_V_J_star;
      %get thetastar'
      
      Gamma2=0;

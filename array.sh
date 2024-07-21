@@ -1,14 +1,17 @@
 #!/bin/bash
 
-#SBATCH --job-name=array
-#SBATCH --output=experiments/synthetic/logs/array_%A_%a.out
-#SBATCH --error=experiments/synthetic/logs/array_%A_%a.err
+#SBATCH --job-name=sim
+#SBATCH --output=experiment/run_sim_%A_%a.out
+#SBATCH --error=experiment/run_sim_%A_%a.err
 #SBATCH --array=1-100
 #SBATCH --time=40:00:00
-#SBATCH --partition=broadwl
+#SBATCH --partition=cdonnat
 #SBATCH --ntasks=1
-#SBATCH --mem=1G
+#SBATCH --mem=6G
 #SBATCH --account=pi-cdonnat
+#SBATCH --qos=cdonnat
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=yatingliu@rcc.uchicago.edur
 
 # Print the task id.
 echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
@@ -22,9 +25,10 @@ job_id=$SLURM_ARRAY_JOB_ID
 source activate ${SCRATCH}/${USER}/.local/share/r-miniconda/envs/r-reticulate
 #sinteractive
 module load gsl
-module load R/4.2.0
 module load matlab
 module load python
+module unload R
+module load R/4.2.0
 source activate ${SCRATCH}/${USER}/.local/share/r-miniconda/envs/r-reticulate
 #source activate ~/.local/share/r-miniconda/envs/r-reticulate
 
@@ -38,5 +42,5 @@ cd $SCRATCH/$USER/sparse-network-effects-estimation/
 working_dir="${SCRATCH}/${USER}/sparse-network-effects-estimation/"
 #working_dir="topic-modeling/"
 #Rscript synthetic_array.R $1234 $result_file $15 $MATLAB_PATH # 5 topic
-matlab -nodisplay -r "run('eta5_array.m');exit" 
+matlab -nodisplay -r "run('eta3_array.m');exit" 
 # 5 topic
