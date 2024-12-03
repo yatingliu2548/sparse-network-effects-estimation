@@ -1,4 +1,5 @@
-function [hatrho_J,hateta_J,var_source_Gamma1,var_source_Gamma2,jn,var_source_Gamma1_th,bound1,bound2] = eta_estimation(e,omega,alpha,r,seed,eta_num)
+
+function [hatrho_J,hateta_J,var_source_Gamma1,var_source_Gamma2,jn,var_source_Gamma1_th,bound1,bound2,g31iJ,g31iJ_2] = eta_estimation2(e,omega,alpha,r,seed,eta_num)
     rng(seed);
     n=size(e,1);
     jn=floor(n^(alpha));
@@ -74,7 +75,7 @@ function [hatrho_J,hateta_J,var_source_Gamma1,var_source_Gamma2,jn,var_source_Ga
         end
         
         %a31iJstar*|I_3^{(l)}\in J:i\in I_3^{(l)}|
-        if (eta_num==3) | (eta_num==5) | (eta_num==4)
+        if (eta_num==3) | (eta_num==5)  | (eta_num==4)
             a3iJstar(i)=a3iJstar(i)+h3_star_ijk;
             a3iJstar(j)=a3iJstar(j)+h3_star_ijk;
             a3iJstar(k)=a3iJstar(k)+h3_star_ijk;
@@ -113,7 +114,9 @@ function [hatrho_J,hateta_J,var_source_Gamma1,var_source_Gamma2,jn,var_source_Ga
     else
         var_source_Gamma1_th=0;
     end
-    
+    g31iJ= max(0,hatrho_J^(-2)).*(rval.*g31iJstar);
+    g31iJ_2= max(0,hatrho_J^(-2)).*(rval.*g31iJstar-4.*hatU1star_J.*g11iJstar);
+
     bound1=n^(-3/2)*sqrt(log(n));
     bound2=max(0,hatrho_J^(-2))*n^(-1/2-alpha)*(log(n))^(1/2);
     %rate_Gamma2=rho^(-2)*n^(-alpha);
@@ -123,3 +126,10 @@ function [hatrho_J,hateta_J,var_source_Gamma1,var_source_Gamma2,jn,var_source_Ga
     %rate_deg=rho^2*n^(alpha-3/2))
 
 end
+
+
+
+
+
+
+

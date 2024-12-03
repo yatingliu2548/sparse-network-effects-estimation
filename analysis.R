@@ -172,7 +172,7 @@ eta_param <- read_delim("C:/Users/arvinyfw/Desktop/yating/two-sample-effects/eta
                         delim = ";", escape_double = FALSE, trim_ws = TRUE)
 #eta_param <- read.csv("C:/Users/arvinyfw/Desktop/yating/two-sample-effects/eta_2_normal.csv") 
 
-
+rho1_val=1
 eta_param=eta_param%>%
   mutate(deg_label=case_when(
     c == 0 ~ "b_deg",   # Both are degenerate
@@ -180,12 +180,12 @@ eta_param=eta_param%>%
     c == 2 ~ "b_nondeg"    # Both are non-degenerate
   ), 
   diff_rho=case_when(
-    rho2==0.1 ~ 0.1/0.9,
-    rho2==0.3 ~ 0.3/0.9,
-    rho2==0.5 ~ 0.5/0.9,
-    rho2==0.7 ~ 0.7/0.9,
-    rho2==0.9 ~0.9/0.9,
-    rho2==1 ~ 1/0.9
+    rho2==0.1 ~ 0.1/rho1_val,
+    rho2==0.3 ~ 0.3/rho1_val,
+    rho2==0.5 ~ 0.5/rho1_val,
+    rho2==0.7 ~ 0.7/rho1_val,
+    rho2==0.9 ~0.9/rho1_val,
+    rho2==1 ~ 1/rho1_val,
   ))
 
 eta_param=eta_param%>%
@@ -324,7 +324,11 @@ ggplot(data, aes(sample = (hatDelta_J - mean_delta) / sqrt(var_th), color = as.f
 #############type I error and Type II error
 
 set.seed(123)
+eta_param <- read_delim("C:/Users/yichg/yating/sparse-network-effects-estimation/data/eta_two_sample_rho_0.9_lambda_1.2.csv", 
+                        delim = ";", escape_double = FALSE, trim_ws = TRUE)
 
+#eta_two_sample_n_600_rho_1_lambda_1.2.csv
+#eta_two_sample_rho_0.9_lambda_1.2.csv
 test_stat <- eta_param %>%
   filter(dist_no == 10, deg_label == "b_deg") %>%  # Filter rows based on conditions
   group_by(diff_n, alpha2, eta_num) %>%            # Group by diff_n, alpha2, and eta_num
@@ -337,7 +341,7 @@ test_stat <- eta_param %>%
   filter(dist_no == 10, deg_label == "o_deg") %>%  # Filter rows based on conditions
   group_by(diff_n, alpha2, eta_num) %>%            # Group by diff_n, alpha2, and eta_num
   summarise(
-    type_II = sum(abs(hatDelta_J/sqrt(var_th)) > qnorm(0.975, 0, 1)) / 1000  # Calculate Type I error rate
+    type_II = sum(abs((hatDelta_J-mean(hatDelta_J))/sqrt(var_th)) >=qnorm(0.975, 0, 1)) / 1000  # Calculate Type II error rate
     #,count = n()  # Count occurrences where condition is met
   ) 
 
@@ -357,15 +361,15 @@ lambda_label <- c(
 lambda_legend=c(1.2,1.8)
 
 # Assuming your dataframe is called `data`
-ggplot(test_stat, aes(x = diff_n, y = type_I, color = as.factor(eta_num), shape = as.factor(alpha2), group = interaction(eta_num, alpha2))) +
-  geom_point(size = 1.5) +                # Use points with different shapes and colors
-  geom_line() +                         # Connect points with lines for each combination of `eta_num` and `alpha2`
-  geom_hline(yintercept = 0.05, linetype = "dashed", color = "black",linewidth=0.6) +  # Add horizontal line at type_I = 0.05                       # Connect points with lines for each combination of `eta_num` and `alpha2`
-  scale_shape_manual(values = c(16, 17),breaks=lambda_legend,labels = lambda_label) +  # Set specific shapes (16 = circle, 17 = triangle)
+ggplot(test_stat, aes(x = diff_n, y = 1-type_II, color = as.factor(eta_num), shape = as.factor(alpha2), group = interaction(eta_num, alpha2))) +
+  geom_point(size = 2.5) +                # Use points with different shapes and colors
+  geom_line(linewidth=0.7) +                         # Connect points with lines for each combination of `eta_num` and `alpha2`
+  geom_hline(yintercept = 1, linetype = "dashed", color = "black",linewidth=0.8) +  # Add horizontal line at type_I = 0.05                       # Connect points with lines for each combination of `eta_num` and `alpha2`
+  scale_shape_manual(values = c(16, 2),breaks=lambda_legend,labels = lambda_label) +  # Set specific shapes (16 = circle, 17 = triangle)
   scale_color_manual(values = color_blind_palette,breaks=legend_order, labels = color_label) +  # Use colorblind-friendly palette
   labs(
-    x =  expression("Difference in Networks" ~ (n[2] - n[1])),
-    y = "Type I Error",
+    x =  expression("Difference in Network Size" ~ (n[2] -n[1])),
+    y = "Power",
     color = "Difference in Network Effects",
     shape =  "Difference in Subsampling"
   ) +
@@ -379,3 +383,4 @@ ggplot(test_stat, aes(x = diff_n, y = type_I, color = as.factor(eta_num), shape 
     legend.text.align = 0,  #
     strip.text = element_text(size = 8)
   )
+
