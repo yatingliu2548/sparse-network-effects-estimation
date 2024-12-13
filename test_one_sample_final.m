@@ -1,8 +1,8 @@
 % Assuming model_test_nondeg and two_sample_estimator are already defined in MATLAB
-rhosize = [0.1,0.3,0.5,0.7,1];
+rhosize = 0.5;
 % city_sizes=[100,200,400,600,800];
 city_size=600;
-alphasizes = [1.2,1.8];
+alphasizes = [1.1,1.3,1.5,1.7,1.9];
 c_options=[0,5].^(1/2);
 distributionfilter=[1,2];
 replication = 1000; 
@@ -88,6 +88,6 @@ delete(gcp('nocreate')); % Shut down the parallel pool
 
 
 T = array2table(test_stat_1, 'VariableNames', {'eta_num','hatrho_J','hateta_J','var_source_Gamma1','var_source_Gamma2','var_source_Gamma1_th','bound1','bound2','jn','alpha','c','deg_status','n','rho','sigma','eta','xi','distribution','replications'});
-name="eta_one_sample_n_"+city_size+".csv";
+name="eta_one_sample__varyinglambda_n_600_rho_"+rhosize+".csv";
 writetable(T, name, 'Delimiter', ';','WriteVariableNames', true);
 
