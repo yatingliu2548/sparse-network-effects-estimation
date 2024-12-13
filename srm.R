@@ -51,8 +51,7 @@ srm_test <- function(city_size,error_mari){
 }
 
 
-st_a_alt_normal <- function(n,C){
-  rho=1
+st_a_alt_normal <- function(n,C,rho){
   a_i.save <- rnorm(n, 1, 1)
   
   ###
@@ -84,18 +83,22 @@ registerDoParallel(cores=num_cores)
 city_size <- 100
 C_list <- sqrt(c(0,0.5,5,10,20)) 
 replication <- 1000
-test_stat <- matrix(NA,replication,5)
-
+test_stat3 <- matrix(NA,replication,5*6)
+test_stat5 <- matrix(NA,replication,5*6)
+test_stat5_2 <- matrix(NA,replication,5*6)
+n2=c(100,200,300,500,700,900)
+#n2=c(0.1,0.3,0.5,0.7,0.9,1)
 coln <- 0
 set.seed(68)
 for (city_size2 in n2){
 for (c_val in C_list){
   coln <- coln + 1
   
-  r3 <- foreach(i=1:replication, .combine=rbind) %dopar% {
+  r3 <- foreach(i=1:replication, .combine=rbind,.export = c("st_a_alt_normal", "TripleR_test", "RR")) %dopar% {
     
     #'@_e_ij
-    Error_term.example <- st_a_alt_normal(n = city_size, C = c_val)
+    Error_term.example <- st_a_alt_normal(n = city_size, C = 0,rho=1)
+    Error_term.example2 <- st_a_alt_normal(n = city_size2, C = c_val,rho=1)
     
     
     #'@_SRM_ANOVA_method
@@ -116,6 +119,8 @@ for (c_val in C_list){
     }else{
       p_value3=666
     }
+    
+    
     est5_1=triplefit1[6]
     est5_2=triplefit2[6]
     se5_1=triplefit1[12]
@@ -128,13 +133,33 @@ for (c_val in C_list){
       # Calculate p-value based on the t-distribution with city_size degrees of freedom
       p_value5 <- 2 * (1 - pt(abs(delta5), df = city_size))
       
+    }else{
+      p_value5=666
     }
-    
-    c(p_value3,p_value5)
+    est7_1=triplefit1[2]
+    est7_2=triplefit2[2]
+    se7_1=triplefit1[8]
+    se7_2=triplefit2[8]
+    if (all(!is.nan(c(est7_1, est7_2, se7_1, se7_2))) && all(!is.na(c(est7_1, est7_2, se7_1, se7_2)))) {
+      
+      # Calculate delta using pooled variance of se3_1 and se3_2
+      delta7 <- (est7_1 - est7_2) / sqrt(se7_1^2 + se7_2^2)
+      
+      # Calculate p-value based on the t-distribution with city_size degrees of freedom
+      p_value7 <- 2 * (1 - pt(abs(delta7), df = city_size))
+      
+    }else{
+      p_value7=666
+    }
+    c(p_value3,p_value5,p_value7)
   }
-  
+  print(city_size2)
   test_stat3[,coln] <- r3[,1]
-  test_stat5[,coln] <- r3[,3]
+  test_stat5[,coln] <- r3[,2]
+  test_stat5_2[,coln] <- r3[,3]
 }
 }
-
+write.csv(as.data.frame(test_stat3), "test_stat3_rho.csv", row.names = FALSE)  # Include row names
+write.csv(as.data.frame(test_stat5), "test_stat5_rho.csv", row.names = FALSE) 
+write.csv(as.data.frame(test_stat5_2), "test_stat5_2_rho.csv", row.names = FALSE) 
+          
